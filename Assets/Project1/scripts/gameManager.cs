@@ -23,6 +23,9 @@ public class gameManager : MonoBehaviour
     float enemyTimer;
     bool enemySpawned;
     float player1HitCount = 0;
+    bool powerUp1Spawnable;
+
+    playerController playerStats;
 
 
     public enum GameState
@@ -40,6 +43,7 @@ public class gameManager : MonoBehaviour
         timer = 0f;
         enemySpawned = true;
         myGameState = GameState.GAMESTART;
+        playerStats = myPlayer.GetComponent<playerController>();
     }
 
     // Update is called once per frame
@@ -61,7 +65,7 @@ public class gameManager : MonoBehaviour
             case GameState.PLAYING:
 
                 Debug.Log("game is playing");
-                //player1HitCount = myPlayer.GetComponent<playerController>().myHealth;
+                player1HitCount = myPlayer.GetComponent<playerController>().myHealth;
                 timer += Time.deltaTime;
                 enemyTimer += Time.deltaTime;
 
@@ -86,10 +90,28 @@ public class gameManager : MonoBehaviour
                 myTimerText.text = timer.ToString();
                 myHitText.text = player1HitCount.ToString();
 
+                if (powerUp1Spawnable)
+                {
+                    StartCoroutine(powerUp1Spawn(Random.Range(30, 60)));
+                }
+
+
+
+                if (playerStats.myHealth <= 0f)
+                {
+                    EnterGameOver();
+                }
+
                 break;
 
             case GameState.GAMEOVER:
                 Debug.Log("game in score screen");
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    EnterPlaying();
+                }
+
+
                 break;
         }
 
@@ -119,6 +141,14 @@ public class gameManager : MonoBehaviour
         enemySpawned = true;
     }
 
+    public IEnumerator powerUp1Spawn(float waitTime)
+    {
+        powerUp1Spawnable = false;
+        yield return new WaitForSeconds(waitTime);
+        //powerUp1 Spawn here
+        powerUp1Spawnable = true;
+    }
+
     //this calls the local GameState and changes it to the given argument
     void ChangeMode(GameState state)
     {
@@ -127,6 +157,8 @@ public class gameManager : MonoBehaviour
 
     void EnterPlaying()
     {
+        timer = 0f;
+        playerStats.myHealth = 1000f;
         startGame.enabled = false;
         myPlayer.SetActive(true);
         enemyPrefab.SetActive(true);
@@ -139,7 +171,12 @@ public class gameManager : MonoBehaviour
     void EnterGameOver()
     {
         //code that changes to the score screen goes here
+        myPlayer.SetActive(false);
+        enemyPrefab.SetActive(false);
+        myHitText.enabled = false;
+        startGame.enabled = true;
         ChangeMode(GameState.GAMEOVER);
+
     }
 
     void EnterStartMenu()
@@ -149,9 +186,6 @@ public class gameManager : MonoBehaviour
     }
 
 }
-
-
-
 
 
 

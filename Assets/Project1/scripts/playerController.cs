@@ -7,6 +7,11 @@ public class playerController : MonoBehaviour
     public float speed = 1f;
     public SpriteRenderer mySprite;
     public int hitCount = 0;
+    public float myHealth = 1000;
+    Vector3 previousPos;
+    Vector3 targetDir = Vector3.zero;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +44,14 @@ public class playerController : MonoBehaviour
             //Debug.Log("D pressed");
             transform.Translate(Vector3.right * speed);
         }
+        if (this.gameObject.transform.position == previousPos)
+        {
+            myHealth += 1 * Time.deltaTime;
+        }
+
+
+
+        previousPos = this.gameObject.transform.position;
     }
         //OnCollisionEnter2D other stores information on the object collided with so we can check for the enemies here
         void OnCollisionEnter2D(Collision2D other) {
@@ -49,7 +62,15 @@ public class playerController : MonoBehaviour
             StartCoroutine(itsBeenHit(.2f));            
         }
 
-   }
+        }
+
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            //if (/*the other game object is power up 1*/)
+        {
+            //spped += speed;
+        }
+        }
 
         private IEnumerator itsBeenHit(float waitTime)
     {
@@ -58,6 +79,11 @@ public class playerController : MonoBehaviour
         hitCount += 1; //add to the player hitCount - gameManager pulls this number to track number of hits to the player
         yield return new WaitForSeconds(waitTime);
         mySprite.color = Color.white;
+        myHealth -= 25;
 
     }
 }
+
+
+//test code
+//if(other.gameObject.name = 
