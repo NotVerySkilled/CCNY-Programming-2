@@ -86,4 +86,7 @@ public class playerController : MonoBehaviour
 
 
 //test code
-//if(other.gameObject.name = 
+//if(other.gameObject.name = "item"){
+// speed+= 5;
+// destroy(this.GameObject)
+// }//

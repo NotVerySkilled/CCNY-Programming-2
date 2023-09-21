@@ -145,6 +145,8 @@ public class gameManager : MonoBehaviour
     {
         powerUp1Spawnable = false;
         yield return new WaitForSeconds(waitTime);
+        GameObject power;
+        power.name = "item";
         //powerUp1 Spawn here
         powerUp1Spawnable = true;
     }
@@ -157,6 +159,7 @@ public class gameManager : MonoBehaviour
 
     void EnterPlaying()
     {
+        startSpeed = myPlayer.getComponent<playerController>().Speed;
         timer = 0f;
         playerStats.myHealth = 1000f;
         startGame.enabled = false;
