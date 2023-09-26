@@ -23,7 +23,12 @@ public class gameManager : MonoBehaviour
     float enemyTimer;
     bool enemySpawned;
     float player1HitCount = 0;
-    bool powerUp1Spawnable;
+    public bool powerUp1Spawnable;
+    bool powerUp1Spawned;
+
+    // new
+
+    public GameObject powerUpPrefab;
 
     playerController playerStats;
 
@@ -86,6 +91,17 @@ public class gameManager : MonoBehaviour
                     //Instantiate(enemyPrefab, new Vector3(1, 0, 0), Quaternion.identity);
                 }
 
+                if(timer >= 5f)
+                {
+                    powerUp1Spawnable = true;
+                    //Instantiate(powerUpPrefab, new Vector3(1, 0, 0), Quaternion.identity);
+                    Instantiate(powerUpPrefab, new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), 0f), Quaternion.identity);
+
+
+                    //Instantiate(powerUpPrefab, new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), 0f);
+                    Debug.Log("is on");
+                }
+
                 //GUI debug in scene - this updates our textmeshpro object to track gameTime
                 myTimerText.text = timer.ToString();
                 myHitText.text = player1HitCount.ToString();
@@ -141,15 +157,23 @@ public class gameManager : MonoBehaviour
         enemySpawned = true;
     }
 
-    public IEnumerator powerUp1Spawn(float waitTime)
-    {
-        powerUp1Spawnable = false;
-        yield return new WaitForSeconds(waitTime);
-        GameObject power;
-        power.name = "item";
-        //powerUp1 Spawn here
-        powerUp1Spawnable = true;
-    }
+     public IEnumerator powerUp1Spawn(float waitTime)
+     {
+         powerUp1Spawnable = false;
+         yield return new WaitForSeconds(waitTime);
+         //new
+         Vector3 newPos = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), 0f);
+    
+        GameObject power = Instantiate(powerUpPrefab, newPos, Quaternion.identity);
+
+    //new
+         //GameObject power;
+        
+         power.name = "item";
+         //powerUp1 Spawn here
+         //power.GetComponent<playerController>().SetPlayer(myPlayer);   
+         powerUp1Spawnable = true;
+     }
 
     //this calls the local GameState and changes it to the given argument
     void ChangeMode(GameState state)
@@ -159,7 +183,7 @@ public class gameManager : MonoBehaviour
 
     void EnterPlaying()
     {
-        startSpeed = myPlayer.getComponent<playerController>().Speed;
+        //startSpeed = myPlayer.getComponent<playerController>().Speed;
         timer = 0f;
         playerStats.myHealth = 1000f;
         startGame.enabled = false;

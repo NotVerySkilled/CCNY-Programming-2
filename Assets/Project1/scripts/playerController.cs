@@ -15,7 +15,7 @@ public class playerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -24,7 +24,7 @@ public class playerController : MonoBehaviour
         //the following is a simple WASD controller
         // Input.GetKey checks to see if a key is currently pressed down, instead of GetKeyDown or GetKeyUp, which only check for the press/release
         //this uses all if() statements so multiple movement inputs can be active in a single update loop
-        if(Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W))
         {
             //Debug.Log("W pressed");
             transform.Translate(Vector3.up * speed);
@@ -53,26 +53,27 @@ public class playerController : MonoBehaviour
 
         previousPos = this.gameObject.transform.position;
     }
-        //OnCollisionEnter2D other stores information on the object collided with so we can check for the enemies here
-        void OnCollisionEnter2D(Collision2D other) {
+    //OnCollisionEnter2D other stores information on the object collided with so we can check for the enemies here
+    void OnCollisionEnter2D(Collision2D other)
+    {
 
-        if(other.gameObject.name == "enemy") 
+        if (other.gameObject.name == "enemy")
         {
             // each time the player is hit, start a coroutine to track hit count
-            StartCoroutine(itsBeenHit(.2f));            
+            StartCoroutine(itsBeenHit(.2f));
         }
 
-        }
+    }
 
-        void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.name == "item")
         {
-            //if (/*the other game object is power up 1*/)
-        {
-            //spped += speed;
+            StartCoroutine(spawningNow(.2f));
         }
-        }
+    }
 
-        private IEnumerator itsBeenHit(float waitTime)
+    private IEnumerator itsBeenHit(float waitTime)
     {
 
         mySprite.color = Color.red; //make the player red so we know it's been hit
@@ -82,11 +83,29 @@ public class playerController : MonoBehaviour
         myHealth -= 25;
 
     }
+
+
+
+    //test code
+    /**/
+
+    private IEnumerator spawningNow(float waitTime)
+    {
+
+        mySprite.color = Color.blue;
+
+        yield return new WaitForSeconds(waitTime);
+        mySprite.color = Color.white;
+        speed += 10;
+
+    }
+
+   /* void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.FindGameObjectWithTag == "item")
+        {
+            StartCoroutine(spawningNow(.2f));
+        }
+    }*/
+
 }
-
-
-//test code
-//if(other.gameObject.name = "item"){
-// speed+= 5;
-// destroy(this.GameObject)
-// }//
